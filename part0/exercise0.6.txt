@@ -1,0 +1,12 @@
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over browser:
+the input is submitted through the database
+end note
+
+server-->browser: [{ content: "como te llamas?", date: "2022-01-12T22:30:07.144Z" }, ...]
+
+note over browser:
+browser executes the js-code from the spa.js 
+using html manipulation to render notes
+end note
