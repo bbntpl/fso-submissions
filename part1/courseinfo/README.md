@@ -1,0 +1,1 @@
+This folder contains exercises 1.1.-1.2 for this part.
