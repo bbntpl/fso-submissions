@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import './App.css';
 
 const totalFeedbacks = ({ good, neutral, bad }) => good + neutral + bad;
 const averageFeedback = (feedbackOpts) => {
@@ -14,7 +14,15 @@ const positiveFeedbackPerc = (feedbackOpts) => {
 //app components
 const Block = ({ headerName }) => <h1 className={'block-header'}>{headerName}</h1>
 
-const StatisticLine = ({ text, value }) => <p>{`${text} ${value}`}</p>
+const StatisticLine = ({ text, value }) => {
+	return (
+		<tr className="stat-line">
+			<th>{text}</th>
+			<th>{value}</th>
+		</tr>
+	)
+}
+
 
 const FeedbackBtn = ({ incrementNum, feedbackOptName }) =>
 	<button onClick={incrementNum}>{feedbackOptName}</button>
@@ -43,14 +51,16 @@ const Statistics = ({ feedbackOpts }) => {
 		return (<p>No feedback given</p>);
 	}
 	return (
-		<>
-			<StatisticLine text='good' value={feedbackOpts.good} />
-			<StatisticLine text='neutral' value={feedbackOpts.neutral} />
-			<StatisticLine text='bad' value={feedbackOpts.bad} />
-			<StatisticLine text='all' value={totalFeedbacks(feedbackOpts)} />
-			<StatisticLine text='average' value={averageFeedback(feedbackOpts)} />
-			<StatisticLine text='positive' value={positiveFeedbackPerc(feedbackOpts)} />
-		</>
+		<table>
+			<tbody>
+				<StatisticLine text='good' value={feedbackOpts.good} />
+				<StatisticLine text='neutral' value={feedbackOpts.neutral} />
+				<StatisticLine text='bad' value={feedbackOpts.bad} />
+				<StatisticLine text='all' value={totalFeedbacks(feedbackOpts)} />
+				<StatisticLine text='average' value={averageFeedback(feedbackOpts)} />
+				<StatisticLine text='positive' value={positiveFeedbackPerc(feedbackOpts)} />
+			</tbody>
+		</table>
 	)
 }
 

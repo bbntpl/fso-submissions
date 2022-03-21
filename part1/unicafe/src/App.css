@@ -13,9 +13,6 @@
   }
 }
 
-.block-header{
-	font-size: 2rem;
-}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -38,4 +35,13 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.block-header{
+	font-size: 2rem;
+}
+
+.stat-line th {
+	text-align: left;
+	font-weight: 300;
 }
