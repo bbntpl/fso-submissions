@@ -1,0 +1,1 @@
+This folder contains exercise 1.6
