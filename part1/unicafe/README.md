@@ -1,1 +1,1 @@
-This folder contains exercise 1.6 - 1.7
+This folder contain exercises 1.6 - 1.8

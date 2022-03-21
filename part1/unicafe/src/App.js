@@ -38,6 +38,19 @@ const FeedbackBtns = ({ feedbackOpts, setFeedbackOpts }) => {
 	)
 }
 
+const Statistics = ({ feedbackOpts }) => {
+	return (
+		<>
+			<FeedbackStat name={'good'} count={feedbackOpts.good} />
+			<FeedbackStat name={'neutral'} count={feedbackOpts.neutral} />
+			<FeedbackStat name={'bad'} count={feedbackOpts.bad} />
+			<FeedbackStat name={'all'} count={totalFeedbacks(feedbackOpts)} />
+			<FeedbackStat name={'average'} count={averageFeedback(feedbackOpts)} />
+			<FeedbackStat name={'positive'} count={positiveFeedbackPerc(feedbackOpts)} />
+		</>
+	)
+}
+
 const App = () => {
 	// save clicks of each button to its own state
 	const [feedbackOpts, setFeedbackOpts] = useState({
@@ -54,12 +67,7 @@ const App = () => {
 			</div>
 			<div>
 				<Block headerName={'statistics'} />
-				<FeedbackStat name={'good'} count={feedbackOpts.good} />
-				<FeedbackStat name={'neutral'} count={feedbackOpts.neutral} />
-				<FeedbackStat name={'bad'} count={feedbackOpts.bad} />
-				<FeedbackStat name={'all'} count={totalFeedbacks(feedbackOpts)} />
-				<FeedbackStat name={'average'} count={averageFeedback(feedbackOpts)} />
-				<FeedbackStat name={'positive'} count={positiveFeedbackPerc(feedbackOpts)} />
+				<Statistics feedbackOpts={feedbackOpts} />
 			</div>
 		</div>
 	);
