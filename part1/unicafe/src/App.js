@@ -1,8 +1,19 @@
 import { useState } from 'react';
 
-const totalFeedbacks = ({good, neutral, bad}) => good + neutral + bad;
+
+const totalFeedbacks = ({ good, neutral, bad }) => good + neutral + bad;
+const averageFeedback = (feedbackOpts) => {
+	const { good, bad } = feedbackOpts;
+	const averageScore = good - bad;
+	return (averageScore / totalFeedbacks(feedbackOpts));
+}
+const positiveFeedbackPerc = (feedbackOpts) => {
+	return (`${(feedbackOpts.good / totalFeedbacks(feedbackOpts)) * 100} %`);
+}
 
 //app components
+const Block = ({ headerName }) => <h1 className={'block-header'}>{headerName}</h1>
+
 const FeedbackStat = ({ name, count }) => <p>{`${name} ${count}`}</p>
 
 const FeedbackBtn = ({ incrementNum, feedbackOptName }) =>
@@ -16,11 +27,11 @@ const FeedbackBtns = ({ feedbackOpts, setFeedbackOpts }) => {
 				feedbackOptName={'good'}
 			/>
 			<FeedbackBtn
-				incrementNum={() => setFeedbackOpts({ ...feedbackOpts, neutral: feedbackOpts.good + 1 })}
+				incrementNum={() => setFeedbackOpts({ ...feedbackOpts, neutral: feedbackOpts.neutral + 1 })}
 				feedbackOptName={'neutral'}
 			/>
 			<FeedbackBtn
-				incrementNum={() => setFeedbackOpts({ ...feedbackOpts, good: feedbackOpts.good + 1 })}
+				incrementNum={() => setFeedbackOpts({ ...feedbackOpts, bad: feedbackOpts.bad + 1 })}
 				feedbackOptName={'bad'}
 			/>
 		</div>
@@ -37,14 +48,18 @@ const App = () => {
 
 	return (
 		<div>
-			<h1>give feedback</h1>
-			<FeedbackBtns feedbackOpts={feedbackOpts} setFeedbackOpts={setFeedbackOpts} />
-			<h1>statistics</h1>
 			<div>
+				<Block headerName={'give feedback'} />
+				<FeedbackBtns feedbackOpts={feedbackOpts} setFeedbackOpts={setFeedbackOpts} />
+			</div>
+			<div>
+				<Block headerName={'statistics'} />
 				<FeedbackStat name={'good'} count={feedbackOpts.good} />
 				<FeedbackStat name={'neutral'} count={feedbackOpts.neutral} />
 				<FeedbackStat name={'bad'} count={feedbackOpts.bad} />
 				<FeedbackStat name={'all'} count={totalFeedbacks(feedbackOpts)} />
+				<FeedbackStat name={'average'} count={averageFeedback(feedbackOpts)} />
+				<FeedbackStat name={'positive'} count={positiveFeedbackPerc(feedbackOpts)} />
 			</div>
 		</div>
 	);
