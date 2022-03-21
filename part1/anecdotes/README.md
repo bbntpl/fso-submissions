@@ -1,1 +1,1 @@
-This folder contains exercise 1.12
+This folder contain exercises 1.12 - 1.13
