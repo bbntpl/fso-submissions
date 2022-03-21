@@ -14,7 +14,7 @@ const positiveFeedbackPerc = (feedbackOpts) => {
 //app components
 const Block = ({ headerName }) => <h1 className={'block-header'}>{headerName}</h1>
 
-const FeedbackStat = ({ name, count }) => <p>{`${name} ${count}`}</p>
+const StatisticLine = ({ text, value }) => <p>{`${text} ${value}`}</p>
 
 const FeedbackBtn = ({ incrementNum, feedbackOptName }) =>
 	<button onClick={incrementNum}>{feedbackOptName}</button>
@@ -44,12 +44,12 @@ const Statistics = ({ feedbackOpts }) => {
 	}
 	return (
 		<>
-			<FeedbackStat name={'good'} count={feedbackOpts.good} />
-			<FeedbackStat name={'neutral'} count={feedbackOpts.neutral} />
-			<FeedbackStat name={'bad'} count={feedbackOpts.bad} />
-			<FeedbackStat name={'all'} count={totalFeedbacks(feedbackOpts)} />
-			<FeedbackStat name={'average'} count={averageFeedback(feedbackOpts)} />
-			<FeedbackStat name={'positive'} count={positiveFeedbackPerc(feedbackOpts)} />
+			<StatisticLine text='good' value={feedbackOpts.good} />
+			<StatisticLine text='neutral' value={feedbackOpts.neutral} />
+			<StatisticLine text='bad' value={feedbackOpts.bad} />
+			<StatisticLine text='all' value={totalFeedbacks(feedbackOpts)} />
+			<StatisticLine text='average' value={averageFeedback(feedbackOpts)} />
+			<StatisticLine text='positive' value={positiveFeedbackPerc(feedbackOpts)} />
 		</>
 	)
 }
