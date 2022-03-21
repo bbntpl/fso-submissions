@@ -39,6 +39,9 @@ const FeedbackBtns = ({ feedbackOpts, setFeedbackOpts }) => {
 }
 
 const Statistics = ({ feedbackOpts }) => {
+	if (!totalFeedbacks(feedbackOpts)) {
+		return (<p>No feedback given</p>);
+	}
 	return (
 		<>
 			<FeedbackStat name={'good'} count={feedbackOpts.good} />
