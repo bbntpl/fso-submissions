@@ -1,3 +1,3 @@
-const Header = (props) => <h1>{props.courseName}</h1>
+const Header = (props) => <h2>{props.courseName}</h2>
 
 export default Header;
