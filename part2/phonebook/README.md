@@ -1,0 +1,1 @@
+This project contains exercise 2.6
