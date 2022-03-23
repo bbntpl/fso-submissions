@@ -1,1 +1,1 @@
-This project contains exercise 2.6
+This project contains exercises 2.6 - 2.7.
