@@ -1,14 +1,20 @@
-const ContactsForm = ({ addName, newName, setNewName }) => {
-	const handleNameByChange = (e) => setNewName(e.target.value);
+const ContactsForm = ({ submitForm, newPerson, setNewPerson }) => {
+	const handleNameByChange = (e) => setNewPerson({ ...newPerson, name: e.target.value });
+	const handleNumberByChange = (e) => setNewPerson({ ...newPerson, number: e.target.value });
 	return (
 		<form>
 			<div>
-				name: <input value={newName} onChange={handleNameByChange} />
+				<div>
+					name: <input value={newPerson.name} onChange={handleNameByChange} />
+				</div>
+				<div>
+					number: <input type="number" value={newPerson.number} onChange={handleNumberByChange} />
+				</div>
 			</div>
 			<div>
 				<button
 					type="submit"
-					onClick={addName}
+					onClick={submitForm}
 				>add</button>
 			</div>
 		</form>
