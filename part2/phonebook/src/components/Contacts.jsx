@@ -1,8 +1,10 @@
+import PersonDetails from './PersonDetails';
+
 const Contacts = ({ persons }) => {
 	return (
 		<div>
 			{
-				persons.map(person => <p key={person.name}>{person.name} {person.number}</p>)
+				persons.map(person => <PersonDetails  key={person.id} person={person} />)
 			}
 		</div>
 	)
