@@ -1,6 +1,5 @@
 const CountryData = ({ country }) => {
 	const { name, languages, flags, capital, area } = country;
-	console.log(country);
 	const displayLanguagesList = () => {
 		const listOfLangEls = [];
 		for (let key in languages) {

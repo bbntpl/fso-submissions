@@ -1,10 +1,14 @@
-const CountryList = ({ filteredCountries }) => {
+const CountryList = ({ filteredCountries, setFilteredCountries }) => {
 	return (
 		<div>
 			{
 				filteredCountries.map(country => {
-					console.log(country);
-					return <p>{country.name.common}</p>
+					return (
+						<div>
+							{country.name.common} 
+							<button onClick={() => setFilteredCountries([country])}>show</button>
+						</div>
+					)
 				})
 			}
 		</div>

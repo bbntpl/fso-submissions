@@ -21,7 +21,10 @@ function App() {
 		} else if (filteredCountries.length <= 10 && filteredCountries.length > 1) {
 
 			//display list of countries filtered by search input
-			return <CountryList filteredCountries={filteredCountries} />
+			return <CountryList
+				filteredCountries={filteredCountries}
+				setFilteredCountries={setFilteredCountries}
+			/>
 		} else if (filteredCountries.length === 1) {
 
 			//display the basic data of the only remaining country
@@ -31,7 +34,6 @@ function App() {
 		return <p></p>
 	}
 
-	console.log(filteredCountries);
 	return (
 		<div>
 			<CountryFilter countries={countries} setFilteredCountries={setFilteredCountries} />
