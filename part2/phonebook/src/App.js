@@ -1,21 +1,27 @@
-import { useState } from 'react'
+import axios from 'axios';
+import { useEffect, useState } from 'react'
 import Contacts from './components/Contacts';
 import ContactsForm from './components/ContactsForm';
 import NameFilterer from './components/NameFilter';
 
 const App = () => {
 	//states
-	const [persons, setPersons] = useState([
-		{ name: 'Arto Hellas', number: '040-123456', id: 1 },
-		{ name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-		{ name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-		{ name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-	]);
-	const [filteredPersons, setFilteredPersons] = useState(persons);
+	const [persons, setPersons] = useState([]);
+	const [filteredPersons, setFilteredPersons] = useState([]);
 	const [newPerson, setNewPerson] = useState({
 		name: '',
 		number: ''
 	});
+
+	//get the response from the data header using axios and 
+	//initialize both persons and filtered persons as its initial data
+	useEffect(() => {
+		axios.get('http://localhost:3001/persons').then(response => {
+			const persons = response.data;
+			setPersons(persons);
+			setFilteredPersons(persons);
+		});
+	}, []);
 
 	function addName(name) {
 		if (!name) return;
@@ -58,6 +64,7 @@ const App = () => {
 		}
 	}
 
+	console.log(persons);
 
 	return (
 		<div>
