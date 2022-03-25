@@ -1,9 +1,11 @@
+import CountryWeather from './CountryWeather';
+
 const CountryData = ({ country }) => {
 	const { name, languages, flags, capital, area } = country;
 	const displayLanguagesList = () => {
 		const listOfLangEls = [];
 		for (let key in languages) {
-			listOfLangEls.push(<li>{languages[key]}</li>);
+			listOfLangEls.push(<li key={key}>{languages[key]}</li>);
 		}
 		return listOfLangEls;
 	}
@@ -17,6 +19,7 @@ const CountryData = ({ country }) => {
 				{displayLanguagesList()}
 			</ul>
 			<img alt={`${name} /'s flag`} src={flags.png} />
+			<CountryWeather country={country} />
 		</div>
 	)
 }

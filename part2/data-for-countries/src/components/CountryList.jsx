@@ -4,7 +4,7 @@ const CountryList = ({ filteredCountries, setFilteredCountries }) => {
 			{
 				filteredCountries.map(country => {
 					return (
-						<div>
+						<div key={country.name.common}>
 							{country.name.common} 
 							<button onClick={() => setFilteredCountries([country])}>show</button>
 						</div>
