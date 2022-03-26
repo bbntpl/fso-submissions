@@ -35,11 +35,15 @@ const App = () => {
 	}
 
 	function addPerson(newPerson, persons) {
+		const personsUrl = 'http://localhost:3001/persons';
 		const { name, number } = newPerson;
 		addName(name);
 		addNumber(number);
+		axios.post(personsUrl, newPerson)
+			.then(response => {
+				setPersons(persons.concat(response.data));
+			})
 		setNewPerson({ ...newPerson, id: newPerson.length + 1 });
-		setPersons(persons.concat(newPerson));
 		setFilteredPersons(persons.concat(newPerson));
 		clearInputs();
 	}
@@ -63,8 +67,6 @@ const App = () => {
 			addPerson(newPerson, persons);
 		}
 	}
-
-	console.log(persons);
 
 	return (
 		<div>

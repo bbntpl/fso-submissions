@@ -8,7 +8,7 @@ const ContactsForm = ({ submitForm, newPerson, setNewPerson }) => {
 					name: <input value={newPerson.name} onChange={handleNameByChange} />
 				</div>
 				<div>
-					number: <input type="number" value={newPerson.number} onChange={handleNumberByChange} />
+					number: <input value={newPerson.number} onChange={handleNumberByChange} />
 				</div>
 			</div>
 			<div>
