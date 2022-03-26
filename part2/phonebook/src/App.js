@@ -1,8 +1,12 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react'
+
+//components
 import Contacts from './components/Contacts';
 import ContactsForm from './components/ContactsForm';
 import NameFilterer from './components/NameFilter';
+
+//helpers
+import axiosServices from './services/persons';
 
 const App = () => {
 	//states
@@ -16,11 +20,11 @@ const App = () => {
 	//get the response from the data header using axios and 
 	//initialize both persons and filtered persons as its initial data
 	useEffect(() => {
-		axios.get('http://localhost:3001/persons').then(response => {
-			const persons = response.data;
-			setPersons(persons);
-			setFilteredPersons(persons);
-		});
+		axiosServices.getAll().then(returnedPersons => {
+			setPersons(returnedPersons);
+			setFilteredPersons(returnedPersons);
+		})
+		.catch(error => console.log(`error: ${error}`));
 	}, []);
 
 	function addName(name) {
@@ -35,13 +39,12 @@ const App = () => {
 	}
 
 	function addPerson(newPerson, persons) {
-		const personsUrl = 'http://localhost:3001/persons';
 		const { name, number } = newPerson;
 		addName(name);
 		addNumber(number);
-		axios.post(personsUrl, newPerson)
-			.then(response => {
-				setPersons(persons.concat(response.data));
+		axiosServices.create(newPerson)
+			.then(returnedPersons => {
+				setPersons(persons.concat(returnedPersons));
 			})
 		setNewPerson({ ...newPerson, id: newPerson.length + 1 });
 		setFilteredPersons(persons.concat(newPerson));
