@@ -16,10 +16,18 @@ const update = (id, newObject) => {
   return request.then(response => response.data);
 }
 
+// note: This variable is used becaused "delete" is a 
+// reserved word for JS
+const deleteObject = (id) => {
+	const urlWithId = `${baseUrl}/${id}`;
+	const request = axios.delete(urlWithId);
+  return request.then(response => response.data);
+}
 const axiosServices = {
 	getAll,
 	create,
-	update
+	update,
+	delete: deleteObject
 };
 
 export default axiosServices;

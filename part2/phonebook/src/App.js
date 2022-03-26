@@ -51,6 +51,20 @@ const App = () => {
 		clearInputs();
 	}
 
+	const deletePerson = (id, name) => {
+		if (window.confirm(`Delete ${name}`)) {
+			axiosServices
+			.delete(id)
+			.then(returnedPersons => {
+				const deleteById = person => person.id !== id;
+				setPersons(persons.filter(deleteById));
+				setFilteredPersons(persons.filter(deleteById));
+			})
+		} else {
+			console.log(`Canceled deletion of ${name}'s number`);
+		}
+
+	}
 	function clearInputs() {
 		setNewPerson({ ...newPerson, name: '', number: '' });
 	}
@@ -78,7 +92,7 @@ const App = () => {
 			<h2>add a new</h2>
 			<ContactsForm submitForm={submitForm} setNewPerson={setNewPerson} newPerson={newPerson} />
 			<h2>Numbers</h2>
-			<Contacts persons={filteredPersons} />
+			<Contacts persons={filteredPersons} deletePerson={deletePerson} />
 		</div>
 	)
 };
