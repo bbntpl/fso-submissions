@@ -75,6 +75,11 @@ const App = () => {
 					const deleteById = person => person.id !== id;
 					setPersons(persons.filter(deleteById));
 					setFilteredPersons(persons.filter(deleteById));
+				}).catch(error => {
+					setNotifProps({ 
+						...notifProps, 
+						color: 'red', 
+						message: `Information of ${name} has already been removed from server` });
 				})
 		} else {
 			console.log(`Canceled deletion of ${name}'s number`);
