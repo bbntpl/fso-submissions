@@ -4,14 +4,21 @@ import { useEffect, useState } from 'react'
 import Contacts from './components/Contacts';
 import ContactsForm from './components/ContactsForm';
 import NameFilterer from './components/NameFilter';
+import Notification from './components/Notification';
 
 //helpers
 import axiosServices from './services/persons';
+
+import './App.css';
 
 const App = () => {
 	//states
 	const [persons, setPersons] = useState([]);
 	const [filteredPersons, setFilteredPersons] = useState([]);
+	const [notifProps, setNotifProps] = useState({
+		color: '',
+		message: null
+	});
 	const [newPerson, setNewPerson] = useState({
 		name: '',
 		number: ''
@@ -27,6 +34,15 @@ const App = () => {
 			})
 			.catch(error => console.log(`error: ${error}`));
 	}, []);
+
+	// schedule a 5 sec notification when the 
+	// notification message gets modified 
+	useEffect(() => {
+		if (notifProps.message === null) return;
+		setTimeout(() => {
+			setNotifProps({ ...notifProps, color: '', message: null });
+		}, 5000);
+	}, [notifProps]);
 
 	function addName(name) {
 		if (!name) return;
@@ -46,6 +62,7 @@ const App = () => {
 			.then(returnedPersons => {
 				setPersons(persons.concat(returnedPersons));
 				setFilteredPersons(persons.concat(returnedPersons));
+				setNotifProps({ ...notifProps, color: 'green', message: `Added ${name}` });
 			})
 		setNewPerson({ ...newPerson, id: newPerson.length + 1 });
 	}
@@ -108,6 +125,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification notifProps={notifProps} setNotifProps={setNotifProps} />
 			<NameFilterer persons={persons} setFilteredPersons={setFilteredPersons} />
 			<h2>add a new</h2>
 			<ContactsForm submitForm={submitForm} setNewPerson={setNewPerson} newPerson={newPerson} />

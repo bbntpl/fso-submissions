@@ -1,1 +1,1 @@
-This project contains exercises 2.6-2.11 and 2.15-2.18.
+This project contains exercises 2.6-2.11 and 2.15-2.20.
