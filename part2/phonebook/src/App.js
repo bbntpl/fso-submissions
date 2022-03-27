@@ -20,11 +20,12 @@ const App = () => {
 	//get the response from the data header using axios and 
 	//initialize both persons and filtered persons as its initial data
 	useEffect(() => {
-		axiosServices.getAll().then(returnedPersons => {
-			setPersons(returnedPersons);
-			setFilteredPersons(returnedPersons);
-		})
-		.catch(error => console.log(`error: ${error}`));
+		axiosServices.getAll()
+			.then(returnedPersons => {
+				setPersons(returnedPersons);
+				setFilteredPersons(returnedPersons);
+			})
+			.catch(error => console.log(`error: ${error}`));
 	}, []);
 
 	function addName(name) {
@@ -34,8 +35,7 @@ const App = () => {
 
 	function addNumber(number) {
 		if (!number) return;
-		//converting a phone/tel number to a text
-		setNewPerson({ ...newPerson, number: number + '' });
+		setNewPerson({ ...newPerson, number: number });
 	}
 
 	function addPerson(newPerson, persons) {
@@ -45,21 +45,20 @@ const App = () => {
 		axiosServices.create(newPerson)
 			.then(returnedPersons => {
 				setPersons(persons.concat(returnedPersons));
+				setFilteredPersons(persons.concat(returnedPersons));
 			})
 		setNewPerson({ ...newPerson, id: newPerson.length + 1 });
-		setFilteredPersons(persons.concat(newPerson));
-		clearInputs();
 	}
 
 	const deletePerson = (id, name) => {
 		if (window.confirm(`Delete ${name}`)) {
 			axiosServices
-			.delete(id)
-			.then(returnedPersons => {
-				const deleteById = person => person.id !== id;
-				setPersons(persons.filter(deleteById));
-				setFilteredPersons(persons.filter(deleteById));
-			})
+				.delete(id)
+				.then(returnedPersons => {
+					const deleteById = person => person.id !== id;
+					setPersons(persons.filter(deleteById));
+					setFilteredPersons(persons.filter(deleteById));
+				})
 		} else {
 			console.log(`Canceled deletion of ${name}'s number`);
 		}
@@ -69,20 +68,41 @@ const App = () => {
 		setNewPerson({ ...newPerson, name: '', number: '' });
 	}
 
-	function alertIfNameAlreadyExists() {
-		alert(`${newPerson.name} is already added to phonebook`);
+	// propmpt the user about existing person
+	// and ask to replace the number or not
+	function confirmReplaceNumber(name) {
+		return window.confirm(`${name} is already added to phonebook, replace the old number with a new one?`);
 	}
+	const filterByPropValue = (propKey) => persons.filter(person => person[propKey] === newPerson[propKey]);
+	const isPersonNameExists = filterByPropValue('name').length;
 
-	const isNameExists = () => persons.filter(person => person.name === newPerson.name).length;
 
+	const replaceOldNumber = (person, newPerson) => {
+		const { id } = person;
+		const { number, name } = newPerson;
+		if (confirmReplaceNumber(name)) {
+			const modifiedInfo = { ...person, number: number };
+			axiosServices
+				.update(id, modifiedInfo)
+				.then(returnedPerson => {
+					const modifyCopyOfPersons = () => persons.map(person => {
+						return person.id === id ? returnedPerson : person;
+					})
+					setPersons(modifyCopyOfPersons);
+					setFilteredPersons(modifyCopyOfPersons);
+				})
+		}
+	}
 	function submitForm(e) {
 		e.preventDefault();
 		if (!newPerson.name.length) return;
-		if (isNameExists()) {
-			alertIfNameAlreadyExists();
+		if (isPersonNameExists) {
+			const existingPerson = filterByPropValue('name')[0];
+			replaceOldNumber(existingPerson, newPerson);
 		} else {
 			addPerson(newPerson, persons);
 		}
+		clearInputs();
 	}
 
 	return (
