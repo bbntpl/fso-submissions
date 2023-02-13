@@ -1,29 +1,49 @@
-browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+exercise 0.4
 
-note over browser:
-the input is submitted through the database
-end note
+initial requests (depiction of events)
 
-server-->browser: instruct the browser to redirect to the same page once
-note over browser:
-the browser redirects to the same page
-end note
-browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
-server-->browser: HTML-code
-browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
-server-->browser: main.css
-browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
-server-->browser: notes.js
+  browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+  server-->browser: HTML-code
+  browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+  server-->browser: main.css
+  browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+  server-->browser: notes.js
 
-note over browser:
-browser starts executing js-code
-that requests JSON data from server 
-end note
+  note over browser:
+  browser starts executing js-code
+  that requests JSON data from server 
+  end note
 
-browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
-server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+  browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+  server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
 
-note over browser:
-browser executes the event handler
-that renders notes to display
-end note
+  note over browser:
+  browser executes the event handler
+  that render notes to display them
+  end note
+
+client/browser-user involvement (depiction of events)
+
+  note for sending data to server:
+  type content to the input tag
+  submit content
+  end note
+
+  browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+  note after form submission:
+  refresh page
+  end note
+
+
+  browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+  server-->browser: main.css
+  browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+  server-->browser: notes.js
+  browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+  server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+  note over browser:
+  request files except HTML once again
+  to update the visual of the webpage
+  end note
