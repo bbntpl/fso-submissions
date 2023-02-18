@@ -1,143 +1,140 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react';
 
-//components
-import Contacts from './components/Contacts';
-import ContactsForm from './components/ContactsForm';
-import NameFilterer from './components/NameFilter';
+import personService from './services/persons';
+
 import Notification from './components/Notification';
-
-//helpers
-import axiosServices from './services/persons';
-
-import './App.css';
+import SearchFilter from './components/SearchFilter';
+import Persons from './components/Persons';
+import PersonForm from './components/PersonForm';
 
 const App = () => {
-	//states
+	const initialNotifObj = {
+		message: null,
+		type: 'msg'
+	}
+
 	const [persons, setPersons] = useState([]);
-	const [filteredPersons, setFilteredPersons] = useState([]);
-	const [notifProps, setNotifProps] = useState({
-		color: '',
-		message: null
-	});
-	const [newPerson, setNewPerson] = useState({
-		name: '',
-		number: ''
-	});
+	const [newName, setNewName] = useState('');
+	const [newNumber, setNewNumber] = useState('');
+	const [notifObj, setNotifObj] = useState(initialNotifObj);
+	const [filterKeyword, setFilterKeyword] = useState('');
 
-	//get the response from the data header using axios and 
-	//initialize both persons and filtered persons as its initial data
+	// fetch data from json server using axios library
 	useEffect(() => {
-		axiosServices.getAll()
-			.then(returnedPersons => {
-				setPersons(returnedPersons);
-				setFilteredPersons(returnedPersons);
-			})
-			.catch(error => console.log(`error: ${error}`));
-	}, []);
 
-	// schedule a 5 sec notification when the 
-	// notification message gets modified 
-	useEffect(() => {
-		if (notifProps.message === null) return;
+		const initializeData = initialData => {
+			setPersons(initialData);
+		};
+
+		personService.getAll().then(initializeData);
+	}, [])
+
+	// event handlers
+	const handleNameChange = (event) => {
+		setNewName(event.target.value);
+	}
+
+	const handleNumberChange = (event) => {
+		setNewNumber(event.target.value);
+	}
+
+	const handleFilterKeywordChange = (event) => {
+		setFilterKeyword(event.target.value);
+	}
+
+	const handleDelete = (person) => {
+		const { name, id } = person;
+		if (window.confirm(`Delete ${name} ?`)) {
+			personService.deletePerson(id)
+				.then(deletedData => {
+					console.log('This object is deleted: ', deletedData);
+					setPersons(persons => persons.filter(person => person.id !== id));
+				});
+		}
+	}
+
+	const notifyUser = (message, type = 'message') => {
+		setNotifObj({message, type})
+
 		setTimeout(() => {
-			setNotifProps({ ...notifProps, color: '', message: null });
-		}, 5000);
-	}, [notifProps]);
-
-	function addName(name) {
-		if (!name) return;
-		setNewPerson({ ...newPerson, name: name });
+			setNotifObj(initialNotifObj);
+		}, 5000)
 	}
 
-	function addNumber(number) {
-		if (!number) return;
-		setNewPerson({ ...newPerson, number: number });
+	const isPersonDuplicated = (newName) => {
+		return persons.some(person => person.name === newName);
 	}
 
-	function addPerson(newPerson, persons) {
-		const { name, number } = newPerson;
-		addName(name);
-		addNumber(number);
-		axiosServices.create(newPerson)
-			.then(returnedPersons => {
-				setPersons(persons.concat(returnedPersons));
-				setFilteredPersons(persons.concat(returnedPersons));
-				setNotifProps({ ...notifProps, color: 'green', message: `Added ${name}` });
-			})
-		setNewPerson({ ...newPerson, id: newPerson.length + 1 });
+	const updateNumber = (newNumber) => {
+		const person = persons.find(person => person.name === newName);
+		const personWithNewNumber = {
+			...person,
+			number: newNumber,
+		}
+
+		personService.update(person.id, personWithNewNumber).then(updatedData => {
+			setPersons(persons => persons.map(p => {
+				return p.id === person.id ? updatedData : p;
+			}));
+		})
+		.catch((error) => {
+			console.log(error);
+			const errorMsg = `Information ${person.name} has already been removed from server`;
+			notifyUser(errorMsg, 'error');
+		})
 	}
 
-	const deletePerson = (id, name) => {
-		if (window.confirm(`Delete ${name}`)) {
-			axiosServices
-				.delete(id)
-				.then(returnedPersons => {
-					const deleteById = person => person.id !== id;
-					setPersons(persons.filter(deleteById));
-					setFilteredPersons(persons.filter(deleteById));
-				}).catch(error => {
-					setNotifProps({ 
-						...notifProps, 
-						color: 'red', 
-						message: `Information of ${name} has already been removed from server` });
-				})
+	const addPerson = (newPersonObject) => {
+		personService.create(newPersonObject).then(returnedPerson => {
+			setPersons(persons.concat(returnedPerson));
+			notifyUser(`Added ${newPersonObject.name}`);
+		});
+	}
+
+	const submitPersonInfo = (event) => {
+		event.preventDefault();
+		const newPersonObject = {
+			name: newName,
+			number: newNumber
+		}
+
+		const textConfirmation = `${newName} is already added to phonebook, replace the old number with a new one?`
+		if (isPersonDuplicated(newName)) {
+			if (window.confirm(textConfirmation)) {
+				updateNumber(newNumber);
+			}
 		} else {
-			console.log(`Canceled deletion of ${name}'s number`);
+			addPerson(newPersonObject);
 		}
 
-	}
-	function clearInputs() {
-		setNewPerson({ ...newPerson, name: '', number: '' });
-	}
-
-	// propmpt the user about existing person
-	// and ask to replace the number or not
-	function confirmReplaceNumber(name) {
-		return window.confirm(`${name} is already added to phonebook, replace the old number with a new one?`);
-	}
-	const filterByPropValue = (propKey) => persons.filter(person => person[propKey] === newPerson[propKey]);
-	const isPersonNameExists = filterByPropValue('name').length;
-
-
-	const replaceOldNumber = (person, newPerson) => {
-		const { id } = person;
-		const { number, name } = newPerson;
-		if (confirmReplaceNumber(name)) {
-			const modifiedInfo = { ...person, number: number };
-			axiosServices
-				.update(id, modifiedInfo)
-				.then(returnedPerson => {
-					const modifyCopyOfPersons = () => persons.map(person => {
-						return person.id === id ? returnedPerson : person;
-					})
-					setPersons(modifyCopyOfPersons);
-					setFilteredPersons(modifyCopyOfPersons);
-				})
-		}
-	}
-	function submitForm(e) {
-		e.preventDefault();
-		if (!newPerson.name.length) return;
-		if (isPersonNameExists) {
-			const existingPerson = filterByPropValue('name')[0];
-			replaceOldNumber(existingPerson, newPerson);
-		} else {
-			addPerson(newPerson, persons);
-		}
-		clearInputs();
+		setNewName('');
+		setNewNumber('');
 	}
 
 	return (
 		<div>
 			<h2>Phonebook</h2>
-			<Notification notifProps={notifProps} setNotifProps={setNotifProps} />
-			<NameFilterer persons={persons} setFilteredPersons={setFilteredPersons} />
-			<h2>add a new</h2>
-			<ContactsForm submitForm={submitForm} setNewPerson={setNewPerson} newPerson={newPerson} />
-			<h2>Numbers</h2>
-			<Contacts persons={filteredPersons} deletePerson={deletePerson} />
+			<Notification notifObj={notifObj} />
+			<SearchFilter
+				handleChange={handleFilterKeywordChange}
+				value={filterKeyword}
+			/>
+			<h3>Add a new</h3>
+			<PersonForm
+				newName={newName}
+				newNumber={newNumber}
+				handleNameChange={handleNameChange}
+				handleNumberChange={handleNumberChange}
+				submitPersonInfo={submitPersonInfo}
+			/>
+			<h3>Numbers</h3>
+			<Persons
+				persons={persons}
+				filterKeyword={filterKeyword}
+				handleDelete={handleDelete}
+			/>
 		</div>
 	)
-};
+}
 
 export default App;

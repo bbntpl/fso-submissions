@@ -1,44 +1,38 @@
-import { useEffect, useState } from 'react';
-import CountryFilter from './components/CountryFilter';
-import CountryList from './components/CountryList';
-import CountryData from './components/CountryData';
-import './App.css';
+import { useState, useEffect } from 'react';
+import Display from './components/Display';
+
+const countriesApiUrl = 'https://restcountries.com/v3.1/all';
+
+const getCountriesAPI = () => {
+	const promise = fetch(countriesApiUrl);
+	return promise.then(response => response.json());
+}
 
 function App() {
-	const [countries, setCountries] = useState([]);
-	const [filteredCountries, setFilteredCountries] = useState([]);
-	useEffect(() => {
-		fetch('https://restcountries.com/v3.1/all')
-			.then(response => response.json())
-			.then(countries => setCountries(countries));
-	}, [])
+	const [filterKeyword, setFilterKeyword] = useState('');
+	const [countries, setCountries] = useState(null);
 
-	const displayFilterResultByConditions = (filteredCountries) => {
-		if (filteredCountries.length > 10) {
+	const initializeCountries = () => {
+		getCountriesAPI().then(initialData => {
+			setCountries(initialData);
+		})
+	}
 
-			//display a text that indicates the limit of search filter
-			return <p>Too many matches, specify another filter</p>
-		} else if (filteredCountries.length <= 10 && filteredCountries.length > 1) {
+	useEffect(initializeCountries, []);
 
-			//display list of countries filtered by search input
-			return <CountryList
-				filteredCountries={filteredCountries}
-				setFilteredCountries={setFilteredCountries}
-			/>
-		} else if (filteredCountries.length === 1) {
-
-			//display the basic data of the only remaining country
-			//which is the result of the search filter
-			return <CountryData country={filteredCountries[0]} />
-		}
-		return <p></p>
+	const handleChange = (event) => {
+		setFilterKeyword(event.target.value);
 	}
 
 	return (
-		<div>
-			<CountryFilter countries={countries} setFilteredCountries={setFilteredCountries} />
+		<div className="App">
+			<p>find countries <input onChange={handleChange} value={filterKeyword} /></p>
 			{
-				displayFilterResultByConditions(filteredCountries)
+				(countries !== null && filterKeyword) &&
+				<Display
+					filterKeyword={filterKeyword}
+					countries={countries}
+				/>
 			}
 		</div>
 	);
