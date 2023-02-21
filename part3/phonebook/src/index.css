@@ -1,0 +1,28 @@
+h1 {
+  color: green;
+  font-style: italic;
+}
+
+.note {
+  color: grey;
+  padding-top: 3px;
+  font-size: 15px;
+}
+
+[class^=notification] {
+	color: green;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.notification-message {
+  color: green;
+}
+
+.notification-error {
+	color: red;
+}
