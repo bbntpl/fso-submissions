@@ -12,7 +12,7 @@ const create = (newObject) => {
 	return promise.then(response => response.data);
 }
 
-const deletePerson = (id) => {;
+const deleteItem = (id) => {;
 	const promise = axios.delete(`${baseUrl}/${id}`);
 	return promise.then(response => response.data);
 }
@@ -22,6 +22,11 @@ const update = (id, newObject) => {
 	return promise.then(response => response.data);
 }
 
-const methods = { getAll, create, deletePerson, update }
+const methods = { 
+	getAll, 
+	create, 
+	deleteItem, 
+	update, 
+}
 
 export default methods;

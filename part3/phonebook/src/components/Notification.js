@@ -3,8 +3,9 @@ const Notification = ({ notifObj }) => {
 		type,
 		message,
 	} = notifObj;
+
 	if (message === null) {
-		return null
+		return null;
 	}
 
 	return (

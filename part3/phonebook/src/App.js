@@ -10,7 +10,7 @@ import PersonForm from './components/PersonForm';
 const App = () => {
 	const initialNotifObj = {
 		message: null,
-		type: 'msg'
+		type: 'added'
 	}
 
 	const [persons, setPersons] = useState([]);
@@ -21,7 +21,6 @@ const App = () => {
 
 	// fetch data from json server using axios library
 	useEffect(() => {
-
 		const initializeData = initialData => {
 			setPersons(initialData);
 		};
@@ -42,23 +41,31 @@ const App = () => {
 		setFilterKeyword(event.target.value);
 	}
 
-	const handleDelete = (person) => {
-		const { name, id } = person;
-		if (window.confirm(`Delete ${name} ?`)) {
-			personService.deletePerson(id)
-				.then(deletedData => {
-					console.log('This object is deleted: ', deletedData);
-					setPersons(persons => persons.filter(person => person.id !== id));
-				});
-		}
-	}
-
-	const notifyUser = (message, type = 'message') => {
-		setNotifObj({message, type})
+	const notifyUser = (message, type = 'added') => {
+		setNotifObj({ message, type })
 
 		setTimeout(() => {
 			setNotifObj(initialNotifObj);
 		}, 5000)
+	}
+
+	const deletePerson = (personToBeDeleted) => {
+		const deleteMsg = `${personToBeDeleted.name} is successfully deleted`;
+		setPersons(persons => persons.filter(person => {
+			return person.id !== personToBeDeleted.id;
+		}));
+		notifyUser(deleteMsg, 'deleted');
+	}
+
+	const handleDelete = (person) => {
+		const { name, id } = person;
+
+		if (window.confirm(`Delete ${name} ?`)) {
+			personService.deleteItem(id)
+				.then(_ => {
+					deletePerson(person);
+				});
+		}
 	}
 
 	const isPersonDuplicated = (newName) => {
@@ -72,23 +79,31 @@ const App = () => {
 			number: newNumber,
 		}
 
-		personService.update(person.id, personWithNewNumber).then(updatedData => {
-			setPersons(persons => persons.map(p => {
-				return p.id === person.id ? updatedData : p;
-			}));
-		})
-		.catch((error) => {
-			console.log(error);
-			const errorMsg = `Information ${person.name} has already been removed from server`;
-			notifyUser(errorMsg, 'error');
-		})
+		personService
+			.update(person.id, personWithNewNumber)
+			.then(updatedData => {
+				console.log(updatedData);
+				setPersons(persons => persons.map(p => {
+					return p.id === person.id ? updatedData : p;
+				}));
+				const { name, number } = updatedData;
+				const updateMsg = `${name}'s number is updated to ${number}`;
+				notifyUser(updateMsg, 'added');
+			})
+			.catch((error) => {
+				console.log(error);
+				const errorMsg = `Information ${person.name} has already been removed from server`;
+				notifyUser(errorMsg, 'error');
+			})
 	}
 
 	const addPerson = (newPersonObject) => {
-		personService.create(newPersonObject).then(returnedPerson => {
-			setPersons(persons.concat(returnedPerson));
-			notifyUser(`Added ${newPersonObject.name}`);
-		});
+		personService
+			.create(newPersonObject)
+			.then(returnedPerson => {
+				setPersons(persons.concat(returnedPerson));
+				notifyUser(`Added ${newPersonObject.name}`);
+			});
 	}
 
 	const submitPersonInfo = (event) => {
