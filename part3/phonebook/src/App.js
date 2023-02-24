@@ -78,15 +78,14 @@ const App = () => {
 			...person,
 			number: newNumber,
 		}
-
+		
 		personService
 			.update(person.id, personWithNewNumber)
-			.then(updatedData => {
-				console.log(updatedData);
+			.then(returnedPerson => {
 				setPersons(persons => persons.map(p => {
-					return p.id === person.id ? updatedData : p;
+					return p.id === person.id ? returnedPerson : p;
 				}));
-				const { name, number } = updatedData;
+				const { name, number } = returnedPerson;
 				const updateMsg = `${name}'s number is updated to ${number}`;
 				notifyUser(updateMsg, 'added');
 			})
@@ -108,6 +107,10 @@ const App = () => {
 
 	const submitPersonInfo = (event) => {
 		event.preventDefault();
+
+		// prevent the user from submitting the form without any inputs
+		if(!newName.length && !newNumber.length) return null;
+
 		const newPersonObject = {
 			name: newName,
 			number: newNumber
