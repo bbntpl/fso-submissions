@@ -78,10 +78,11 @@ const App = () => {
 			...person,
 			number: newNumber,
 		}
-		
+
 		personService
 			.update(person.id, personWithNewNumber)
-			.then(returnedPerson => {
+			.then((returnedPerson, arg2) => {
+				console.log(returnedPerson, arg2);
 				setPersons(persons => persons.map(p => {
 					return p.id === person.id ? returnedPerson : p;
 				}));
@@ -89,10 +90,9 @@ const App = () => {
 				const updateMsg = `${name}'s number is updated to ${number}`;
 				notifyUser(updateMsg, 'added');
 			})
-			.catch((error) => {
-				console.log(error);
-				const errorMsg = `Information ${person.name} has already been removed from server`;
-				notifyUser(errorMsg, 'error');
+			.catch(error => {
+				// const errorMsg = `Information ${person.name} has already been removed from server`;
+				notifyUser(error.response.data.error, 'error');
 			})
 	}
 
@@ -102,14 +102,17 @@ const App = () => {
 			.then(returnedPerson => {
 				setPersons(persons.concat(returnedPerson));
 				notifyUser(`Added ${newPersonObject.name}`);
-			});
+			})
+			.catch(error => {
+				notifyUser(error.response.data.error, 'error');
+			})
 	}
 
 	const submitPersonInfo = (event) => {
 		event.preventDefault();
 
 		// prevent the user from submitting the form without any inputs
-		if(!newName.length && !newNumber.length) return null;
+		if (!newName.length && !newNumber.length) return null;
 
 		const newPersonObject = {
 			name: newName,
