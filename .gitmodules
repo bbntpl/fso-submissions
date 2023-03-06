@@ -1,3 +1,8 @@
 [submodule "part3/fso-phonebook-backend"]
 	path = part3/fso-phonebook-backend
 	url = git@github.com:bvrbryn445/fso-phonebook-backend.git
+
+[submodule "part4/fso-blog-list-backend"]
+	path = part4/fso-blog-list-backend
+	url = git@github.com:bvrbryn445/fso-blog-list-backend.git
+	branch = part4-23
