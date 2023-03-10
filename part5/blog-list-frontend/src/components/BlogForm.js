@@ -27,7 +27,7 @@ const BlogForm = ({
 	}
 
 	return (
-		<div>
+		<div data-testid='blog-form-wrapper'>
 			<h1>create new blog</h1>
 			<form onSubmit={handleSubmit}>
 				<div>

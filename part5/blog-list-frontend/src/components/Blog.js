@@ -36,23 +36,31 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 	}
 
 	return (
-		<div style={blogStyle}>
-			<span>
+		<div className='blog' style={blogStyle}>
+			<span className='blog-title'>
 				{blog.title} {blog.author}
 				<button onClick={toggleBlogDetails}>{showBlogDetails ? 'hide' : 'show'}</button>
 			</span>
-			<div style={{ 'display': showBlogDetails ? '' : 'none' }}>
-				<div>
-					<a href={blog.url}>{blog.url}</a>
+			<div
+				className='blog-details'
+				style={{ 'display': showBlogDetails ? '' : 'none' }}
+			>
+				<div className='blog-detail'>
+					<a className='blog-url' href={blog.url}>{blog.url}</a>
 				</div>
-				<div>
-					<span>likes {blog.likes}
+				<div className='blog-detail'>
+					<span className='blog-likes'>likes {blog.likes}
 						<button onClick={handleIncrementLikes}>like</button>
 					</span>
 				</div>
-				<div>{blog.user.name || blog.user.username}</div>
-				<div>
+				<div className='blog-detail'>
+					<p className='blog-user'>
+						{blog.user.name || blog.user.username}
+					</p>
+				</div>
+				<div className='blog-detail'>
 					<button
+						id='blog-remove'
 						style={deleteButtonStyle}
 						onClick={handleDeletion}
 					>remove</button>

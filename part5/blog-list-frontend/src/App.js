@@ -27,7 +27,6 @@ const App = () => {
 	const createBlog = (newBlog) => {
 		blogService.createBlog(newBlog)
 			.then(data => setBlogs(blogs => {
-				console.log(data)
 				return [...blogs, data]
 			}))
 			.catch(exceptions => {
