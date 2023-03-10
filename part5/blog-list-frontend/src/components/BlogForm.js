@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import blogService from '../services/blogs';
 
-const CreateBlog = ({ updateBlogs, notify }) => {
+const BlogForm = ({
+	updateBlogs,
+	createBlog,
+}) => {
 	const initBlog = {
 		title: '',
 		author: '',
@@ -11,15 +13,10 @@ const CreateBlog = ({ updateBlogs, notify }) => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		try {
-			blogService.createBlog(blog);
-			notify(`Added "${blog.title}" by ${blog.author}`, 'success');
+		createBlog(blog)
 
-			setBlog({ ...initBlog });
-			updateBlogs();
-		} catch (exceptions) {
-			notify(exceptions.response.data.error)
-		}
+		setBlog({ ...initBlog });
+		updateBlogs();
 	}
 
 	const handleChange = (key) => (event) => {
@@ -34,7 +31,7 @@ const CreateBlog = ({ updateBlogs, notify }) => {
 			<h1>create new blog</h1>
 			<form onSubmit={handleSubmit}>
 				<div>
-					username
+					title:
 					<input
 						type="title"
 						value={blog.title}
@@ -66,4 +63,4 @@ const CreateBlog = ({ updateBlogs, notify }) => {
 	)
 }
 
-export default CreateBlog;
+export default BlogForm;
