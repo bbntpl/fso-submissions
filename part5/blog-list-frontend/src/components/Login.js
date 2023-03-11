@@ -14,10 +14,11 @@ const Login = (props) => {
 
 	return (
 		<>
-			<form onSubmit={submitUserCredentials}>
+			<form onSubmit={submitUserCredentials} id='login-form'>
 				<div>
 					username
 					<input
+						id='username-input'
 						type="text"
 						value={username}
 						name="Username"
@@ -27,13 +28,14 @@ const Login = (props) => {
 				<div>
 					password
 					<input
+						id='password-input'
 						type="password"
 						value={password}
 						name="Password"
 						onChange={changePassword}
 					/>
 				</div>
-				<button type="submit">login</button>
+				<button id='login-btn' type="submit">login</button>
 			</form>
 		</>
 	)

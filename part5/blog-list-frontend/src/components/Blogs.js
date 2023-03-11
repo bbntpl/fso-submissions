@@ -1,6 +1,6 @@
 import Blog from './Blog';
 
-const Blogs = ({ blogs, updateBlog, deleteBlog }) => {
+const Blogs = ({ blogs, updateBlog, deleteBlog, isBlogOwnedByUser }) => {
 	const sortedBlogsByHighestLikes = blogs.sort((a, b) => b.likes - a.likes)
 	return (
 		blogs.length === 0
@@ -12,6 +12,7 @@ const Blogs = ({ blogs, updateBlog, deleteBlog }) => {
 						blog={blog}
 						updateBlog={updateBlog}
 						deleteBlog={deleteBlog}
+						isBlogOwnedByUser={isBlogOwnedByUser}
 					/>
 				)}
 			</div>

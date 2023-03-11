@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, isBlogOwnedByUser }) => {
 	const [showBlogDetails, setShowBlogDetails] = useState(false)
 	const blogStyle = {
 		paddingTop: 10,
@@ -59,11 +59,12 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 					</p>
 				</div>
 				<div className='blog-detail'>
-					<button
-						id='blog-remove'
-						style={deleteButtonStyle}
-						onClick={handleDeletion}
-					>remove</button>
+					{isBlogOwnedByUser(blog.user.username) &&
+						<button
+							id='blog-remove'
+							style={deleteButtonStyle}
+							onClick={handleDeletion}
+						>remove</button>}
 				</div>
 			</div>
 		</div>

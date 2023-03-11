@@ -49,6 +49,10 @@ const App = () => {
 			})
 	}
 
+	const isBlogOwnedByUser = (username) => {
+		return user.username === username
+	}
+
 	const deleteBlog = (blogId, blog) => {
 		blogService.deleteBlog(blogId)
 			.then(() => {
@@ -165,6 +169,7 @@ const App = () => {
 								blogs={blogs}
 								updateBlog={updateBlog}
 								deleteBlog={deleteBlog}
+								isBlogOwnedByUser={isBlogOwnedByUser}
 							/>
 						</div>
 				}
