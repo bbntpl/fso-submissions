@@ -6,3 +6,7 @@
 	path = part4/fso-blog-list-backend
 	url = git@github.com:bvrbryn445/fso-blog-list-backend.git
 	branch = part4-23
+[submodule "part5/fso-blog-list-backend"]
+	path = part5/fso-blog-list-backend
+	url = git@github.com:bvrbryn445/fso-blog-list-backend.git
+	branch = part5-23
