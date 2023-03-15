@@ -11,10 +11,8 @@ describe('anecdoteReducer', () => {
 		const state = [...initialState]
 		deepFreeze(state)
 		const action = {
-			type: 'VOTE',
-			payload: {
-				id: state[0].id
-			}
+			type: 'anecdotes/voteAt',
+			payload: state[0].id
 		}
 		const newState = anecdoteReducer(state, action)
 		expect(newState).toHaveLength(initialState.length)
@@ -29,10 +27,8 @@ describe('anecdoteReducer', () => {
 		const state = [...initialState]
 		const newAnecdote = 'this is a new anecdote'
 		const action = {
-			type: 'ADD',
-			payload: {
-				content: newAnecdote
-			}
+			type: 'anecdotes/createAnecdote',
+			payload: newAnecdote
 		}
 
 		deepFreeze(state)
