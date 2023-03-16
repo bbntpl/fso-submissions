@@ -4,46 +4,41 @@ jest.useFakeTimers();
 jest.spyOn(global, 'setTimeout');
 
 describe('notificationReducer', () => {
-	test('notify with message', () => {
-		const state = null
+	const initialState = []
+
+	test('show', () => {
+		const state = initialState
 
 		const action = {
-			type: 'notification/setNotification',
-			payload: 'You voted this anecdote'
+			type: 'notification/showNotification',
+			payload: {
+				id: 1,
+				content: 'You voted this anecdote'
+			}
 		}
 
 		const newState = notificationReducer(state, action)
-		console.log(newState)
-		expect(setTimeout).toHaveBeenCalledTimes(1)
-		expect(newState).toMatchObject({
-			timer: setTimeout,
-			isTimerRunning: true,
+		expect(newState).toContainEqual({
+			id: 1,
 			content: 'You voted this anecdote'
 		})
-		expect(newState.content).toEqual('You voted this anecdote')
+		expect(newState[0].content).toEqual('You voted this anecdote')
+		expect(newState).toHaveLength(1)
 	})
 
-	test('notification lasts for 5 seconds', () => {
-		const state = null
+	test('hides notification', () => {
+		const state = [{
+			id: 1,
+			content: 'You voted this anecdote'
+		}]
 
 		const action = {
-			type: 'notification/setNotification',
-			payload: 'You voted this anecdote'
+			type: 'notification/hideNotification',
+			payload: 1
 		}
 
 		const newState = notificationReducer(state, action)
-		expect(newState.content).toEqual('You voted this anecdote')
 		
-		expect(setTimeout).toHaveBeenCalledTimes(1);
-	
-		jest.setTimeout(() => {
-			expect(newState).toEqual({
-				timer: null,
-				isTimerRunning: false,
-				content: null
-			})
-		}, 5000)
-
-		expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 5000);
+		expect(newState).toHaveLength(0);
 	})
 })

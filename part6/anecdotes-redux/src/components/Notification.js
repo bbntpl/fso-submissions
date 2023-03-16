@@ -1,8 +1,4 @@
-import { useSelector } from 'react-redux'
-
-const Notification = (props) => {
-	const notification = useSelector(state => state.notification)
-	const { isTimerRunning, content } = notification
+const Notification = ({content}) => {
 	const style = {
 		border: 'solid',
 		padding: 10,
@@ -10,8 +6,8 @@ const Notification = (props) => {
 	}
 
 	return (
-		(isTimerRunning && content) && < div style={style} >
-			{notification}
+		< div style={style} >
+			{content}
 		</div >
 	)
 }
