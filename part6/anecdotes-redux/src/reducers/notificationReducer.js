@@ -15,15 +15,16 @@ const notificationSlice = createSlice({
 
 let nextNotificationId = 0;
 
-export const showNotificationWithTimeout = (dispatch, content) => {
-	const { showNotification, hideNotification } = notificationSlice.actions
+export const { showNotification, hideNotification } = notificationSlice.actions;
 
-  const id = nextNotificationId++
-  dispatch(showNotification({id, content}))
-  setTimeout(() => {
-    dispatch(hideNotification(id))
-  }, 5000)
+export const notifyUser = (content, seconds) => {
+	return dispatch => {
+		const id = nextNotificationId++
+		dispatch(showNotification({id, content}))
+		setTimeout(() => {
+			dispatch(hideNotification(id))
+		}, seconds * 1000)
+	}
 }
 
-export const { showNotification, hideNotification } = notificationSlice.actions;
 export default notificationSlice.reducer;
