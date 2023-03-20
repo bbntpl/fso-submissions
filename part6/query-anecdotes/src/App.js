@@ -6,8 +6,12 @@ import {
 	useQuery,
 	useMutation
 } from 'react-query'
+import { useNotify } from './NotificationContext'
 
 const App = () => {
+	// custom hook that notify user for 5 seconds
+	const notifyUser = useNotify()
+
 	// access the client
 	const queryClient = useQueryClient()
 
@@ -17,18 +21,22 @@ const App = () => {
 	// mutations
 	const addAnecdoteMutation = useMutation(createNew, {
 		onSuccess: (newAnecdote) => {
+			const { content } = newAnecdote
 			const anecdotes = queryClient.getQueryData('anecdotes')
 			queryClient.setQueryData('anecdotes', anecdotes.concat(newAnecdote))
-		}
+			notifyUser(`You have added ${content}`)
+		},
+		onError: (err) => notifyUser(err.response.data.error)
 	})
 
 	const updateAnecdoteMutation = useMutation(update, {
 		onSuccess: (updatedAnecdote) => {
-			const id = updatedAnecdote.id
+			const { id, content } = updatedAnecdote
 			const anecdotes = queryClient.getQueryData('anecdotes')
 			queryClient.setQueryData('anecdotes', anecdotes.map(anecdote => {
 				return anecdote.id === id ? updatedAnecdote : anecdote
 			}))
+			notifyUser(`You have voted ${content}`)
 		}
 	})
 
@@ -49,7 +57,7 @@ const App = () => {
 			<h3>Anecdote app</h3>
 
 			<Notification />
-			<AnecdoteForm addAnecdoteMutation={addAnecdoteMutation}/>
+			<AnecdoteForm addAnecdoteMutation={addAnecdoteMutation} />
 
 			{query.data
 				.sort((a, b) => b.votes - a.votes)
