@@ -10,3 +10,11 @@
 	path = part5/fso-blog-list-backend
 	url = git@github.com:bvrbryn445/fso-blog-list-backend.git
 	branch = part5-23
+[submodule "part7/fso-blog-list-frontend"]
+	path = part7/fso-blog-list-frontend
+	url = git@github.com:bvrbryn445/fso-blog-list-frontend.git
+	branch = redux-ver
+[submodule "part7/fso-blog-list-backend"]
+	path = part7/fso-blog-list-backend
+	url = git@github.com:bvrbryn445/fso-blog-list-backend.git
+	branch = part7-21
