@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"start": "nodemon main.js"
+		"start": "nodemon index.js"
 	},
 	"dependencies": {
 		"@apollo/server": "^4.7.1",
