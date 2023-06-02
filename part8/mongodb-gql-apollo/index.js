@@ -125,8 +125,10 @@ type User {
   id: ID!
 }
 
-type Token {
-	value: String!
+type LoginOutput {
+	username: String!
+	favoriteGenre: String!
+	token: String!
 }
 
   type Query {
@@ -155,7 +157,7 @@ type Token {
 		login(
 			username: String!
 			password: String!
-		): Token
+		): LoginOutput
 	}
 `
 
@@ -173,11 +175,16 @@ const resolvers = {
 			const authorDoc = await Author.findOne({ name: author });
 
 			if (author && genre) {
-				return await Book.find({ author: authorDoc._id, genre }).populate('author');
+				return await Book.find({
+					author: authorDoc._id,
+					genres: genre
+				}).populate('author');
 			} else if (author) {
 				return await Book.find({ author: authorDoc._id }).populate('author');
 			} else if (genre) {
-				return await Book.find({ genre }).populate('author');
+				return await Book.find({
+					genres: genre
+				}).populate('author');
 			}
 			return await Book.find({}).populate('author');
 		},
@@ -315,7 +322,9 @@ const resolvers = {
 			}
 
 			return {
-				value: jwt.sign(userForToken, process.env.JWT_SECRET)
+				token: jwt.sign(userForToken, process.env.JWT_SECRET),
+				username: user.username,
+				favoriteGenre: user.favoriteGenre
 			}
 		}
 	}
@@ -340,8 +349,6 @@ startStandaloneServer(server, {
 
 			return { currentUser }
 		}
-
-
 	}
 }).then(({ url }) => {
 	console.log(`Server ready at ${url}`)
