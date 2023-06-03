@@ -1,12 +1,16 @@
-export default function Notification({ errors }) {
-	if (!errors) {
+export default function Notification({ messages, type = 'error' }) {
+	if (!messages) {
 		return null
 	}
+
+	const notifStyles = {
+		color: `${type === 'error' ? 'red' : 'green' }`
+	}
 	
-	return <div style={{ color: 'red' }}>
+	return <div style={notifStyles}>
 		{
-			errors.map((err, index) => {
-				return <p key={index}>- {err}</p>
+			messages.map((msg, index) => {
+				return <p key={msg}>- {msg}</p>
 			})
 		}
 	</div>

@@ -1,6 +1,6 @@
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useSubscription } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { ALL_BOOKS } from '../queries'
+import { ALL_BOOKS, BOOK_ADDED } from '../queries'
 
 export default function Recommendations(props) {
 
@@ -8,6 +8,17 @@ export default function Recommendations(props) {
 	const [books, setBooks] = useState([])
 
 	const [getAllBooks, { loading, data }] = useLazyQuery(ALL_BOOKS)
+	const { data: newData } = useSubscription(BOOK_ADDED)
+
+	useEffect(() => {
+		if (newData && newData.bookAdded) {
+			setBooks(previousBooks => ([
+				...previousBooks,
+				newData.bookAdded
+			]))
+		}
+	}, [newData])
+
 
 	useEffect(() => {
 		if (user) {

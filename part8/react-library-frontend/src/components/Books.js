@@ -1,9 +1,10 @@
-import { useLazyQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
+import { useLazyQuery, useSubscription } from '@apollo/client'
+import { ALL_BOOKS, BOOK_ADDED } from '../queries'
 import { useState, useEffect } from 'react';
 
 const Books = (props) => {
 	const [getAllBooks, { loading, data }] = useLazyQuery(ALL_BOOKS);
+	const { data: newData } = useSubscription(BOOK_ADDED)
 	const [selectedGenre, setSelectedGenre] = useState('')
 	const [availableGenres, setAvailableGenres] = useState([])
 	const [books, setBooks] = useState([])
@@ -15,24 +16,35 @@ const Books = (props) => {
 	}, [selectedGenre, getAllBooks])
 
 	useEffect(() => {
+		if (newData && newData.bookAdded) {
+			const genres = newData.bookAdded.genres
+			if (!selectedGenre || genres.includes(selectedGenre)) {
+				setBooks(books => ([
+					...books,
+					newData.bookAdded
+				]))
+			}
+		}
+	}, [newData])
+
+	useEffect(() => {
 		if (data && data.allBooks) {
-			console.log(data.allBooks)
 			setBooks(data.allBooks)
 		}
 	}, [data])
 
 	useEffect(() => {
-		setAvailableGenres(
-			books.reduce((genres, book) => {
-				if (Array.isArray(book.genres)) {
-					const genresToBeAdded = book.genres.filter(genre => !genres.includes(genre))
-					return [...genres, ...genresToBeAdded]
+		const genreSet = new Set();
+		books.forEach(book => {
+			if (Array.isArray(book.genres)) {
+				book.genres.forEach(genre => {
+					genreSet.add(genre);
+				});
+			}
+		});
+		setAvailableGenres([...genreSet]);
+	}, [books]);
 
-				}
-				return genres
-			}, [])
-		)
-	}, [books])
 
 	if (!props.show) {
 		return null

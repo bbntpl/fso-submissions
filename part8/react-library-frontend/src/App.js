@@ -12,7 +12,8 @@ const App = () => {
 	const [user, setUser] = useState(
 		JSON.parse(localStorage.getItem('loggedUser')) || null
 	)
-	const [errors, setErrors] = useState([])
+	const [notifMessages, setNotifMessages] = useState([])
+	const [notifType, setNotifType] = useState('error')
 
 	const handleLogout = () => {
 		localStorage.clear()
@@ -25,10 +26,12 @@ const App = () => {
 		setUser(user)
 	}
 
-	const notifyUser = (errors) => {
-		setErrors(errors)
+	const notifyUser = (messages, type = 'error') => {
+		setNotifMessages(messages)
+		setNotifType(type)
 		setTimeout(() => {
-			setErrors([])
+			setNotifMessages([])
+			setNotifType('error')
 		}, 5000)
 	}
 
@@ -48,12 +51,15 @@ const App = () => {
 						: <button onClick={() => setPage('login')}>login</button>
 				}
 			</div>
-			<Notification errors={errors} />
+			<Notification messages={notifMessages} type={notifType} />
 			<Authors show={page === 'authors'} />
 
 			<Books show={page === 'books'} />
 
-			<NewBook show={page === 'add'} />
+			<NewBook
+				show={page === 'add'}
+				setNotifMessages={notifyUser}
+			/>
 
 			<Recommendations
 				show={page === 'recommendations'}
