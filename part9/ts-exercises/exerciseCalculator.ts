@@ -1,6 +1,6 @@
-import { errorHandling, parseMultipleArguments } from './helper';
+// import { errorHandling, parseMultipleArguments } from './helper';
 
-type RatingOptions = 1 | 2 | 3
+type RatingOptions = 1 | 2 | 3;
 type RatingDescriptions = 'eres basura' | 'no esta mal' | 'bien hecho';
 
 interface Rating {
@@ -16,15 +16,22 @@ interface ExerciseResult extends Rating {
 	average: number;
 }
 
-const exerciseCalculator = (...days: number[]): ExerciseResult => {
-	const TARGET = 2;
+export const exerciseCalculator = (days: number[], target: number): ExerciseResult => {
+	if (!days.every(day => typeof day === 'number') || typeof target !== 'number') {
+		throw new Error('malformatted parameters');
+	}
+	if (days.length === 0 || !target) {
+		throw new Error('parameters missing');
+	}
+
+	const TARGET = target;
 	const ratingDescriptions: RatingDescriptions[] = [
 		'eres basura',
 		'no esta mal',
 		'bien hecho'
 	];
 
-	const average = days.reduce((sum, d) => sum + d, 0) / days.length
+	const average = days.reduce((sum, d) => sum + d, 0) / days.length;
 
 	const calculateRating = (average: number) => {
 		let rating: RatingOptions = 1;
@@ -36,8 +43,8 @@ const exerciseCalculator = (...days: number[]): ExerciseResult => {
 		return {
 			ratingDescription: ratingDescriptions[rating - 1],
 			rating
-		}
-	}
+		};
+	};
 
 	const ratingObj = calculateRating(average);
 
@@ -49,11 +56,11 @@ const exerciseCalculator = (...days: number[]): ExerciseResult => {
 		target: TARGET,
 		success: average >= TARGET,
 		average
-	}
+	};
 
 	return result;
-}
+};
 
-const args = errorHandling(parseMultipleArguments, process.argv);
+// const args = errorHandling(parseMultipleArguments, process.argv);
 
-console.log(errorHandling(exerciseCalculator, ...args))
+// console.log(errorHandling(exerciseCalculator, ...args))
