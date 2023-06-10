@@ -34,7 +34,6 @@ interface AddPatientParams {
 }
 
 const addPatientEntry = ({ patientId, newEntry }: AddPatientParams) => {
-
 	const entry: Entry = {
 		id: uuidv4(),
 		...newEntry

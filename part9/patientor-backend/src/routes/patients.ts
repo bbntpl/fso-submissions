@@ -1,7 +1,7 @@
 import express from 'express';
 import { addPatient, addPatientEntry, getPatient, getPatients } from '../services/patientService';
 import toNewPatient from '../utils/toNewPatient';
-import toNewEntry from '../utils/toNewEntry'; 
+import toNewEntry from '../utils/toNewEntry';
 
 const router = express.Router();
 
@@ -21,7 +21,7 @@ router.get('/', (_req, res) => {
 router.get('/:id', (req, res) => {
 	const id = req.params.id;
 	try {
-		const fetchedPatient = res.json(getPatient(id));
+		const fetchedPatient = getPatient(id);
 		res.json(fetchedPatient);
 	} catch (error: unknown) {
 		if (error instanceof Error) {
@@ -62,7 +62,6 @@ router.post('/:id/entries', (req, res) => {
 		}
 		res.status(400).send(errorMessage);
 	}
-	res.json(getPatients());
 });
 
 export default router;

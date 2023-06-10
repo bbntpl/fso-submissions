@@ -41,8 +41,7 @@ const toNewEntry = (object: unknown): EntryWithoutId => {
 	if (
 		'description' in object &&
 		'date' in object &&
-		'specialist' in object &&
-		'gender' in object
+		'specialist' in object
 	) {
 		const typedObject = object as unknown as EntryTypeWithoutBase;
 		const narrowedEntryPiece = entryTypeSelection(typedObject);
